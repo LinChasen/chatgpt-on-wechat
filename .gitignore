@@ -8,6 +8,7 @@ venv*
 QR.png
 nohup.out
 tmp
+config.json
 plugins.json
 itchat.pkl
 *.log
