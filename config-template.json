@@ -7,7 +7,7 @@
   ],
   "single_chat_reply_prefix": "",
   "group_chat_prefix": [
-    "@AI"
+    "@nick"
   ],
   "group_name_white_list": [
     "我爱我家",
