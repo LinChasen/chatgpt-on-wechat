@@ -84,10 +84,10 @@ class ChatGPTBot(Bot, OpenAIImage):
                     reply_content["completion_tokens"],
                 )
             )
-            if reply_content["completion_tokens"] == 0 and len(reply_content["content"]) > 0:
+            if reply_content["completion_tokens"] < 0 and len(reply_content["content"]) > 0:
                 reply = Reply(ReplyType.ERROR, reply_content["content"])
-            elif reply_content["completion_tokens"] > 0:
-                self.sessions.session_reply(reply_content["content"], session_id, reply_content["total_tokens"])
+            elif reply_content["completion_tokens"] >= 0:
+                self.sessions.session_reply(reply_content["content"], session_id, reply_content.get("total_tokens"))
                 reply = Reply(ReplyType.TEXT, reply_content["content"])
             else:
                 reply = Reply(ReplyType.ERROR, reply_content["content"])
@@ -143,6 +143,7 @@ class ChatGPTBot(Bot, OpenAIImage):
             elif isinstance(e, openai.error.APIError):
                 logger.warn("[CHATGPT] Bad Gateway: {}".format(e))
                 result["content"] = "请再问我一次"
+                self.sessions.clear_session(session.session_id)
                 if need_retry:
                     time.sleep(10)
             elif isinstance(e, openai.error.APIConnectionError):
